@@ -1,7 +1,8 @@
 
 import React from "react";
 import profilePic from "../assets/Snapchat-1089520344.jpg";
-import QRCode from "../assets/QR-Code.jpeg";
+// import QRCode from "../assets/QR-Code.jpeg";
+import qrCode from "../assets/QR-code.jpeg";
 import Ayush from "../assets/Ayushphoto.jpeg";
 import  { useState } from "react";
 const Contact = () => {
@@ -86,7 +87,7 @@ const Contact = () => {
               {/* QR IMAGE */}
               <div className="w-[200px] h-[200px] bg-white p-2 rounded-xl  shadow-lg coverflow-hidden">
                 <img
-                  src={QRCode}
+                  src={qrCode}
                   alt="QR Code"
                   className="w-full h-full"
                 />
