@@ -7,7 +7,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
 
-dotenv.config({ path: "./backend/.env" });
+dotenv.config();
 // const ADMIN_KEY = "my-secret-admin-123";
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 const app = express();
@@ -61,7 +61,8 @@ const upload = multer({ storage });
 app.get("/", (req, res) => {
   res.send("Backend is running!");
 });
-const uploadPath = "backend/upload/";
+// const uploadPath = "backend/upload/";
+const uploadPath = path.join(__dirname, "uploads");
 
 if (!fs.existsSync(uploadPath)) {
   fs.mkdirSync(uploadPath, { recursive: true });
