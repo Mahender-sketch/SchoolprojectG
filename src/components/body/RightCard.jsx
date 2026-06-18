@@ -8,7 +8,7 @@ const RightCard = ({ paper }) => {
  const deletePaper = async () => {
   try {
     const response = await fetch(
-      `http://localhost:5000/api/papers/${paper._id}`,
+      `https://schoolprojectg.onrender.com/api/papers/${paper._id}`,
       {
         method: "DELETE",
         headers: {

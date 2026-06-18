@@ -8,7 +8,7 @@ const Admin = () => {
  const handleLogin = async () => {
   try {
     const response = await fetch(
-      "http://localhost:5000/api/admin/login",
+      "https://schoolprojectg.onrender.com/api/admin/login",
       {
         method: "POST",
         headers: {

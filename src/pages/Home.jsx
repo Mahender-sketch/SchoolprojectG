@@ -10,7 +10,7 @@ const Home = () => {
   const [refresh, setRefresh] = useState(false);
   const fetchPapers = async () => {
   try {
-    const res = await fetch("http://localhost:5000/api/papers");
+    const res = await fetch("https://schoolprojectg.onrender.com/api/papers");
     const data = await res.json();
     setPapers(data);
   } catch (error) {
