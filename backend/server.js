@@ -94,6 +94,8 @@ app.get("/api/papers", async (req, res) => {
 // Upload Paper
 // Upload Paper
 app.post("/api/papers", upload.single("file"), async (req, res) => {
+  console.log("BODY:", req.body);
+console.log("FILE:", req.file);
   console.log("UPLOAD ROUTE HIT");
   try {
     if (!req.file) {
