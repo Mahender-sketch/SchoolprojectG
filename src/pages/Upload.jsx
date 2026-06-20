@@ -204,13 +204,17 @@ navigate("/", { state: { refresh: true } });
               )}
             </div>
           </div>
-
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white font-bold py-3.5 rounded-xl hover:bg-blue-700 shadow-md transition duration-150 transform active:scale-[0.99]"
-          >
-            Submit to Hub Database
-          </button>
+<button
+  type="submit"
+  disabled={loading}
+  className={`w-full text-white font-bold py-3.5 rounded-xl shadow-md transition duration-150 transform active:scale-[0.99] ${
+    loading
+      ? "bg-gray-400 cursor-not-allowed"
+      : "bg-blue-600 hover:bg-blue-700"
+  }`}
+>
+  {loading ? "Uploading..." : "Submit to Hub Database"}
+</button>
         </form>
       </div>
     </div>
