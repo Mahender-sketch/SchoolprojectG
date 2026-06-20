@@ -3,12 +3,16 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import multer from "multer";
-import path from "path";
 import { fileURLToPath } from "url";
-import fs from "fs";
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 
 dotenv.config();
-// const ADMIN_KEY = "my-secret-admin-123";
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -20,8 +24,6 @@ const __dirname = path.dirname(__filename);
 // Middleware
 app.use(cors());
 app.use(express.json());
-// app.use("/upload", express.static(path.join(__dirname, "upload")));
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // MongoDB Connection
 mongoose
@@ -46,14 +48,14 @@ const paperSchema = new mongoose.Schema({
 const Paper = mongoose.model("Paper", paperSchema);
 
 // Multer Upload Config
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, "uploads"));
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "SchoolProjectG",
+    resource_type: "raw",
+    allowed_formats: ["pdf", "jpg", "jpeg", "png"],
   },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
-  }
-});    
+});
 
 const upload = multer({ storage });
 
@@ -61,12 +63,7 @@ const upload = multer({ storage });
 app.get("/", (req, res) => {
   res.send("Backend is running!");
 });
-// const uploadPath = "backend/upload/";
-const uploadPath = path.join(__dirname, "uploads");
 
-if (!fs.existsSync(uploadPath)) {
-  fs.mkdirSync(uploadPath, { recursive: true });
-}
 
 // Get Papers
 app.get("/api/papers", async (req, res) => {
@@ -113,7 +110,8 @@ console.log("FILE:", req.file);
       subject
     } = req.body;
 
-    const fileUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+    // const fileUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+    const fileUrl = req.file.path;
 
     const newPaper = new Paper({
       uploader,
