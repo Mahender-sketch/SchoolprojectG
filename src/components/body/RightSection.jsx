@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import RightCard from './RightCard';
+import SkeletonCard from './SkeletonCard'; // Added import back
 
-// Comprehensive mock database tracking uploads
 const MOCK_DATASET_PAPERS = [
   { id: 1, uploader: "Mahender", year: "2024", type: "End Semester", course: "BCA", semester: "4", subject: "Advanced Java Programming", likes: 32, uploadDate: "12/05/2024" },
   { id: 2, uploader: "Chandra", year: "2023", type: "Mid Semester", course: "B.Tech", semester: "2", subject: "Engineering Mathematics-II", likes: 14, uploadDate: "20/03/2024" },
@@ -10,7 +10,8 @@ const MOCK_DATASET_PAPERS = [
   { id: 4, uploader: "Gaurav Gaira", year: "2024", type: "End Semester", course: "BCA", semester: "6", subject: "Computer Graphics and Animation", likes: 45, uploadDate: "18/06/2024" }
 ];
 
-const RightSection = ({ papers }) => {
+// Added loading prop back to arguments destructured from Home page props
+const RightSection = ({ papers, loading }) => {
   const navigate = useNavigate();
   
   const [filters, setFilters] = useState({
@@ -29,21 +30,21 @@ const RightSection = ({ papers }) => {
     setFilters({ year: "", type: "", course: "", semester: "" });
   };
 
-    const sourcePapers = papers && papers.length > 0 ? papers : MOCK_DATASET_PAPERS;
+  const sourcePapers = papers && papers.length > 0 ? papers : MOCK_DATASET_PAPERS;
 
-const years = [...new Set(sourcePapers.map((p) => p.year))];
-const types = [...new Set(sourcePapers.map((p) => p.type))];
-const courses = [...new Set(sourcePapers.map((p) => p.course))];
-const semesters = [...new Set(sourcePapers.map((p) => p.semester))];
+  const years = [...new Set(sourcePapers.map((p) => p.year))];
+  const types = [...new Set(sourcePapers.map((p) => p.type))];
+  const courses = [...new Set(sourcePapers.map((p) => p.course))];
+  const semesters = [...new Set(sourcePapers.map((p) => p.semester))];
 
-const filteredPapers = sourcePapers.filter((paper) => {
-  return (
-    (filters.year === "" || paper.year === filters.year) &&
-    (filters.type === "" || paper.type === filters.type) &&
-    (filters.course === "" || paper.course === filters.course) &&
-    (filters.semester === "" || paper.semester === filters.semester)
-  );
-});
+  const filteredPapers = sourcePapers.filter((paper) => {
+    return (
+      (filters.year === "" || paper.year === filters.year) &&
+      (filters.type === "" || paper.type === filters.type) &&
+      (filters.course === "" || paper.course === filters.course) &&
+      (filters.semester === "" || paper.semester === filters.semester)
+    );
+  });
 
   return (
     <div className="w-full md:w-3/4 flex flex-col h-full bg-slate-50" >
@@ -52,29 +53,17 @@ const filteredPapers = sourcePapers.filter((paper) => {
         
         <select name="year" value={filters.year} onChange={handleFilterChange} className="border border-gray-300 p-2.5 rounded-xl text-sm bg-white font-medium outline-none focus:ring-2 focus:ring-blue-500 text-slate-700">
           <option value="">All Years</option>
-          {years.map((year) => ( <option key={year} value={year}>
-                {year}
-                  </option>
-))}
+          {years.map((year) => ( <option key={year} value={year}>{year}</option>))}
         </select>
 
         <select name="type" value={filters.type} onChange={handleFilterChange} className="border border-gray-300 p-2.5 rounded-xl text-sm bg-white font-medium outline-none focus:ring-2 focus:ring-blue-500 text-slate-700">
           <option value="">All Exam Types</option>
-          {types.map((type) => (
-  <option key={type} value={type}>
-    {type}
-  </option>
-))}
+          {types.map((type) => ( <option key={type} value={type}>{type}</option>))}
         </select>
 
         <select name="course" value={filters.course} onChange={handleFilterChange} className="border border-gray-300 p-2.5 rounded-xl text-sm bg-white font-medium outline-none focus:ring-2 focus:ring-blue-500 text-slate-700">
           <option value="">All Courses</option>
-
-{courses.map((course) => (
-  <option key={course} value={course}>
-    {course}
-  </option>
-))}
+          {courses.map((course) => ( <option key={course} value={course}>{course}</option>))}
         </select>
 
         <select name="semester" value={filters.semester} onChange={handleFilterChange} className="border border-gray-300 p-2.5 rounded-xl text-sm bg-white font-medium outline-none focus:ring-2 focus:ring-blue-500 text-slate-700">
@@ -92,10 +81,12 @@ const filteredPapers = sourcePapers.filter((paper) => {
       </div>
 
       <div className="flex-1 p-6 overflow-x-auto flex items-center gap-6 min-h-[500px]">
-        {filteredPapers.length > 0 ? (
+        {/* Conditional loop block handles loading animation states first */}
+        {loading ? (
+          [1, 2, 3, 4].map((n) => <SkeletonCard key={n} />)
+        ) : filteredPapers.length > 0 ? (
           filteredPapers.map(item => (
             <RightCard key={item._id || item.id} paper={item} />
-
           ))
         ) : (
           <div className="w-full text-center py-16 text-slate-400 font-bold border border-dashed border-slate-300 rounded-2xl bg-white m-4">
